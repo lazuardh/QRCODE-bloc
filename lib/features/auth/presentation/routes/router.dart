@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import 'package:qrcode_bloc/pages/error.dart';
-import 'package:qrcode_bloc/pages/login.dart';
-import 'package:qrcode_bloc/pages/settings.dart';
-import 'package:qrcode_bloc/routes/route_name.dart';
+import 'package:qrcode_bloc/features/auth/presentation/pages/error.dart';
+import 'package:qrcode_bloc/features/auth/presentation/pages/login.dart';
+import 'package:qrcode_bloc/features/auth/presentation/pages/settings.dart';
+import 'package:qrcode_bloc/features/auth/presentation/routes/route_name.dart';
 
 import '../pages/home.dart';
 
@@ -34,7 +34,7 @@ final router = GoRouter(
     GoRoute(
       path: '/login',
       name: Routes.login,
-      builder: (context, state) => const LoginPages(),
+      builder: (context, state) => LoginPages(),
     )
   ],
 );

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:qrcode_bloc/utils/color.dart';
-import 'package:qrcode_bloc/utils/text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:qrcode_bloc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:qrcode_bloc/features/auth/presentation/routes/route_name.dart';
+import 'package:qrcode_bloc/features/auth/presentation/utils/color.dart';
+import 'package:qrcode_bloc/features/auth/presentation/utils/text_styles.dart';
 
-import 'widgets/build_container_text_input.dart';
+import '../widgets/build_button.dart';
+import '../widgets/build_container_text_input.dart';
 
 class LoginPages extends StatelessWidget {
-  const LoginPages({super.key});
+  LoginPages({super.key});
+
+  final TextEditingController emailC = TextEditingController();
+  final TextEditingController passwordC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +57,7 @@ class LoginPages extends StatelessWidget {
                 child: TextField(
                   maxLines: 1,
                   obscureText: false,
+                  controller: emailC,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: "Email Address",
@@ -64,6 +73,7 @@ class LoginPages extends StatelessWidget {
                 child: TextField(
                   maxLines: 1,
                   obscureText: true,
+                  controller: passwordC,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: "Password",
@@ -85,21 +95,36 @@ class LoginPages extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: primaryColor100,
-                  borderRadius: BorderRadiusDirectional.circular(10),
-                ),
-                child: Center(
-                  child: Text(
-                    "Login",
-                    style: text2(
-                      whiteColor,
-                      regular,
-                    ),
-                  ),
+              BuildContainerButton(
+                onTap: () {
+                  context
+                      .read<AuthBloc>()
+                      .add(AuthEventLogin(emailC.text, passwordC.text));
+                },
+                child: BlocConsumer<AuthBloc, AuthState>(
+                  listener: (BuildContext context, AuthState state) {
+                    if (state is AuthStateLogin) {
+                      context.goNamed(Routes.home);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is AuthStateLoading) {
+                      return Text(
+                        "Loading",
+                        style: text2(
+                          whiteColor,
+                          regular,
+                        ),
+                      );
+                    }
+                    return Text(
+                      "Login",
+                      style: text2(
+                        whiteColor,
+                        regular,
+                      ),
+                    );
+                  },
                 ),
               )
             ],
