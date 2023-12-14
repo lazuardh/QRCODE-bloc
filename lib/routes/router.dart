@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qrcode_bloc/pages/error.dart';
+import 'package:qrcode_bloc/pages/login.dart';
 import 'package:qrcode_bloc/pages/settings.dart';
 import 'package:qrcode_bloc/routes/route_name.dart';
 
@@ -7,6 +9,16 @@ import '../pages/home.dart';
 
 /// The route configuration.
 final router = GoRouter(
+  redirect: (context, state) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    //cek kondisi saat ini -> terauthentikasi apa tidak
+    if (auth.currentUser == null) {
+      //tidak sedang login or tidak ada user
+      return "/login";
+    } else {
+      return null;
+    }
+  },
   errorBuilder: (context, state) => const ErrorPages(),
   routes: <RouteBase>[
     GoRoute(
@@ -18,6 +30,11 @@ final router = GoRouter(
       path: '/settings',
       name: Routes.settings,
       builder: (context, state) => const Settings(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: Routes.login,
+      builder: (context, state) => const LoginPages(),
     )
   ],
 );
